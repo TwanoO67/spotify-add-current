@@ -1,0 +1,7 @@
+apache-php-dev:
+    build: .
+    container_name: apache-php-dev
+    volumes:
+    - ./src/:/var/www/
+    ports:
+    - 80:80

@@ -1,2 +1,4 @@
 config.php
 src/vendor
+src/refresh.txt
+src/token.txt

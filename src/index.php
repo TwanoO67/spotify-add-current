@@ -20,26 +20,49 @@ $session = new SpotifyWebAPI\Session(
 
 $api = new SpotifyWebAPI\SpotifyWebAPI();
 
-function getLastPlayedTrack($api){
+function getLastPlayedTrack(){
+  global $session,$api;
   $tracks = $api->getMyRecentTracks();
   return $tracks->items[0];
 }
 
-if (isset($_GET['code'])) {
-    $session->requestAccessToken($_GET['code']);
-    $api->setAccessToken($session->getAccessToken());
+$token = file_get_contents('./token.txt');
+if( $token !== false){
+  // si la connexion est deja faite
+  $refresh = file_get_contents('./refresh.txt');
 
+  $api->setAccessToken($token);
+  $session->refreshAccessToken($refresh);
+
+  if( isset($_GET['get_titre']) ){
     //recuperation de la derniere chanson
-    $last = getLastPlayedTrack($api);
-    $titre = $last->track->album->artists[0]->name." - ".$last->track->name;
+    $last = getLastPlayedTrack();
+    $titre = 'LAST: '.$last->track->album->artists[0]->name." - ".$last->track->name;
+    echo $titre;
+
+    $lametric->push($titre);
+  }
+  elseif( isset($_GET['add_titre']) ){
+    //recuperation de la derniere chanson
+    $last = getLastPlayedTrack();
+    $titre = 'ADD: '.$last->track->album->artists[0]->name." - ".$last->track->name;
     echo $titre;
 
     $lametric->push($titre);
     $api->addMyTracks($last->track->id);
+  }
 
-    exit;
-
+}
+elseif (isset($_GET['code'])) {
+  // retour du ouath, on stoques les token de connexion
+    $code = $_GET['code'];
+    $session->requestAccessToken($code);
+    $token = $session->getAccessToken();
+    $refresh = $session->getRefreshToken();
+    file_put_contents('./token.txt',$token);
+    file_put_contents('./refresh.txt',$refresh);
 } else {
+  // la premiere connexion doit etre faite avec un navigateur pour avoir oauth
     $options = [
         'scope' => [
           'playlist-read-private',
@@ -61,6 +84,4 @@ if (isset($_GET['code'])) {
     ];
 
     header('Location: ' . $session->getAuthorizeUrl($options));
-    echo "redirection vers spotify ";
-    die();
 }

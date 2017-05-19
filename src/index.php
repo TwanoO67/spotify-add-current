@@ -26,6 +26,7 @@ function getLastPlayedTrack(){
 }
 
 function sendMessageToLametric($text, $icon = 7990){
+  global $lametric;
   echo $text;
   $lametric->setIcon(7990);
   $lametric->push($text);
@@ -51,6 +52,9 @@ if( $token !== false){
     $titre = 'ADD: '.$last->track->album->artists[0]->name." - ".$last->track->name;
     sendMessageToLametric($titre);
     $api->addMyTracks($last->track->id);
+  }
+  else{
+    sendMessageToLametric("Aucune action choisie");
   }
 
 }

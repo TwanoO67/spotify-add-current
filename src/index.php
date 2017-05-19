@@ -32,6 +32,14 @@ function sendMessageToLametric($text, $icon = 7990){
   $lametric->push($text);
 }
 
+function saveTokenFiles(){
+  global $session;
+  $token = $session->getAccessToken();
+  $refresh = $session->getRefreshToken();
+  file_put_contents('./token.txt',$token);
+  file_put_contents('./refresh.txt',$refresh);
+}
+
 $token = file_get_contents('./token.txt');
 if( $token !== false){
   // si la connexion est deja faite
@@ -39,6 +47,7 @@ if( $token !== false){
 
   $api->setAccessToken($token);
   $session->refreshAccessToken($refresh);
+  saveTokenFiles();
 
   if( isset($_GET['get_titre']) ){
     //recuperation de la derniere chanson
@@ -62,11 +71,7 @@ elseif (isset($_GET['code'])) {
   // retour du ouath, on stoques les token de connexion
     $code = $_GET['code'];
     $session->requestAccessToken($code);
-    $token = $session->getAccessToken();
-    $refresh = $session->getRefreshToken();
-    file_put_contents('./token.txt',$token);
-    file_put_contents('./refresh.txt',$refresh);
-
+    saveTokenFiles();
     sendMessageToLametric("Connexion Oauth réussi!");
 } else {
   // la premiere connexion doit etre faite avec un navigateur pour avoir oauth

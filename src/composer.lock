@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d8cbcb00c71c2873ecee84d4c39fdcea",
+    "content-hash": "7746cbf89ef298be56bbddbf6097f727",
     "packages": [
         {
             "name": "jwilsson/spotify-web-api-php",
@@ -51,12 +51,57 @@
                 "spotify"
             ],
             "time": "2017-04-29T12:21:38+00:00"
+        },
+        {
+            "name": "raphaelz/lametric-php",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/raphaelz/lametric-php.git",
+                "reference": "a560181a7361c8c0d6e8f63891215838bc924a74"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/raphaelz/lametric-php/zipball/a560181a7361c8c0d6e8f63891215838bc924a74",
+                "reference": "a560181a7361c8c0d6e8f63891215838bc924a74",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Lametric": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Raphael Z.",
+                    "email": "hello@raphaelz.com",
+                    "homepage": "http://raphaelz.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A PHP wrapper for accessing the LaMetric API.",
+            "keywords": [
+                "api",
+                "lametric",
+                "wrapper"
+            ],
+            "time": "2017-01-08T04:20:57+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "raphaelz/lametric-php": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

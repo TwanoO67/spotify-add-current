@@ -3,6 +3,15 @@
 require 'vendor/autoload.php';
 require 'config.php';
 
+use Lametric\Lametric;
+
+$lametric = new Lametric(array(
+    'pushURL' => $LAMETRIC_PUSHURL,
+    'token' => $LAMETRIC_TOKEN,
+));
+
+$lametric->setIcon(7990);
+
 $session = new SpotifyWebAPI\Session(
     $CLIENT_ID,
     $CLIENT_SECRET,
@@ -13,30 +22,22 @@ $api = new SpotifyWebAPI\SpotifyWebAPI();
 
 function getLastPlayedTrack($api){
   $tracks = $api->getMyRecentTracks();
-  return $tracks->items[0]->track->id;
+  return $tracks->items[0];
 }
 
 if (isset($_GET['code'])) {
     $session->requestAccessToken($_GET['code']);
     $api->setAccessToken($session->getAccessToken());
 
-    var_dump($session);exit;
-
     //recuperation de la derniere chanson
     $last = getLastPlayedTrack($api);
-    echo "la derniere ".$last;
-    //on attend que la chanson en cours soit rajouter a la liste
-    do{
-      sleep(30);
-      $newid = getLastPlayedTrack($api);
-    }
-    while( $last === $newid );
+    $titre = $last->track->album->artists[0]->name." - ".$last->track->name;
+    echo $titre;
 
-    //des que l'id est different on l'ajoute
-    $api->addMyTracks($newid);
+    $lametric->push($titre);
+    $api->addMyTracks($last->track->id);
 
-    echo "la nouvelle ".$newid;
-
+    exit;
 
 } else {
     $options = [

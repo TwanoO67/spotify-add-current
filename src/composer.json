@@ -1,5 +1,6 @@
 {
     "require": {
-        "jwilsson/spotify-web-api-php": "^1.10"
+        "jwilsson/spotify-web-api-php": "^1.10",
+        "raphaelz/lametric-php": "dev-master"
     }
 }

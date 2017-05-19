@@ -10,7 +10,6 @@ $lametric = new Lametric(array(
     'token' => $LAMETRIC_TOKEN,
 ));
 
-$lametric->setIcon(7990);
 
 $session = new SpotifyWebAPI\Session(
     $CLIENT_ID,
@@ -26,6 +25,12 @@ function getLastPlayedTrack(){
   return $tracks->items[0];
 }
 
+function sendMessageToLametric($text, $icon = 7990){
+  echo $text;
+  $lametric->setIcon(7990);
+  $lametric->push($text);
+}
+
 $token = file_get_contents('./token.txt');
 if( $token !== false){
   // si la connexion est deja faite
@@ -38,17 +43,13 @@ if( $token !== false){
     //recuperation de la derniere chanson
     $last = getLastPlayedTrack();
     $titre = 'LAST: '.$last->track->album->artists[0]->name." - ".$last->track->name;
-    echo $titre;
-
-    $lametric->push($titre);
+    sendMessageToLametric($titre);
   }
   elseif( isset($_GET['add_titre']) ){
     //recuperation de la derniere chanson
     $last = getLastPlayedTrack();
     $titre = 'ADD: '.$last->track->album->artists[0]->name." - ".$last->track->name;
-    echo $titre;
-
-    $lametric->push($titre);
+    sendMessageToLametric($titre);
     $api->addMyTracks($last->track->id);
   }
 
@@ -61,6 +62,8 @@ elseif (isset($_GET['code'])) {
     $refresh = $session->getRefreshToken();
     file_put_contents('./token.txt',$token);
     file_put_contents('./refresh.txt',$refresh);
+
+    sendMessageToLametric("Connexion Oauth réussi!");
 } else {
   // la premiere connexion doit etre faite avec un navigateur pour avoir oauth
     $options = [
@@ -82,6 +85,8 @@ elseif (isset($_GET['code'])) {
           'user-top-read'
         ],
     ];
+
+    sendMessageToLametric("No Oauth connexion...");
 
     header('Location: ' . $session->getAuthorizeUrl($options));
 }
